@@ -1,0 +1,9 @@
+body {
+  margin: 0;
+  font-family: 'Noto Sans JP', 'Inter', sans-serif;
+  background: #f9fafb;
+  color: #222;
+}
+a {
+  text-decoration: none;
+}
