@@ -7,6 +7,8 @@ import numpy as np
 from tqdm import tqdm
 
 OUT_DIR = "data/train"
+CANVAS_WIDTH = 330
+CANVAS_HEIGHT = 50
 FONT_PATHS = [
     "/System/Library/Fonts/Supplemental/Comic Sans MS.ttf",  # playful
     "/System/Library/Fonts/Supplemental/Chalkboard.ttc",     # handwriting-like
@@ -25,9 +27,14 @@ def random_time_line():
     return f"{m}/{d} {sh}:{sm} ~ {eh}:{em}"
 
 def render_text(text: str, font: ImageFont.FreeTypeFont) -> np.ndarray:
-    img = Image.new("L", (256, 64), color=255)
+    img = Image.new("L", (CANVAS_WIDTH, CANVAS_HEIGHT), color=255)
     draw = ImageDraw.Draw(img)
-    draw.text((5, 10), text, font=font, fill=0)
+    text_bbox = draw.textbbox((0, 0), text, font=font)
+    text_width = text_bbox[2] - text_bbox[0]
+    text_height = text_bbox[3] - text_bbox[1]
+    x = max(4, (CANVAS_WIDTH - text_width) // 2)
+    y = max(2, (CANVAS_HEIGHT - text_height) // 2)
+    draw.text((x, y), text, font=font, fill=0)
     return np.array(img)
 
 def augment(img: np.ndarray) -> np.ndarray:
@@ -45,7 +52,7 @@ def augment(img: np.ndarray) -> np.ndarray:
 def generate_dataset(n=10000, out_dir=OUT_DIR):
     os.makedirs(out_dir, exist_ok=True)
     for i in tqdm(range(n), desc="Generating dataset"):
-        font = ImageFont.truetype(random.choice(FONTS), random.randint(26, 32))
+        font = ImageFont.truetype(random.choice(FONTS), random.randint(22, 28))
         txt = random_time_line()
         img = render_text(txt, font)
         img = augment(img)

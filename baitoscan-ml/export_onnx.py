@@ -2,12 +2,12 @@ import torch
 import onnx
 from train_crnn import CRNN, CHARS
 
-def export_model(ckpt_path="baitoscan_crnn.pth", out_path="baitoscan-crnn.onnx"):
+def export_model(ckpt_path="checkpoints/baitoscan_crnn_1.pth", out_path="baitoscan/public/models/baitoscan-crnn_1.onnx"):
     model = CRNN(num_classes=len(CHARS))
     model.load_state_dict(torch.load(ckpt_path, map_location="cpu"))
     model.eval()
 
-    dummy = torch.randn(1, 1, 64, 256)
+    dummy = torch.randn(1, 1, 50, 330)
     torch.onnx.export(
         model,
         dummy,

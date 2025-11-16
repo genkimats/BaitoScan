@@ -62,7 +62,7 @@ self.onmessage = async (e: MessageEvent) => {
   try {
     switch (type) {
       case "load": {
-        session = await ort.InferenceSession.create("/models/baitoscan-crnn.onnx", {
+        session = await ort.InferenceSession.create("/models/baitoscan-crnn_1.onnx", {
           executionProviders: ["wasm"],
         });
         (self as any).postMessage({ type: "ready" });

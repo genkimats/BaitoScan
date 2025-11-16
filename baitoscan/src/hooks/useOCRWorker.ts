@@ -25,13 +25,13 @@ export function useOCRWorker() {
   }, []);
 
   const runInference = (input: Float32Array, shape: number[]) => {
-    return new Promise<string>((resolve, reject) => {
+    return new Promise<{ text: string; confidence: number }>((resolve, reject) => {
       const worker = workerRef.current;
       if (!worker || !isReady) return reject("Worker not ready");
 
       const handleResult = (e: MessageEvent) => {
         if (e.data.type === "result") {
-          resolve(e.data.text);
+          resolve({ text: e.data.text, confidence: e.data.confidence ?? 0 });
           worker.removeEventListener("message", handleResult);
         }
         if (e.data.type === "error") {
